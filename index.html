@@ -77,23 +77,6 @@
                             <circle cx="35" cy="60" r="2" fill="white"/>
                         </svg>
                         
-                        <!-- 
-                        COMO USAR IMAGEM LOCAL:
-                        Para usar uma imagem do seu computador, substitua a linha do SVG acima por:
-                        <img src="./assets/logo.png" alt="Dômata Logo" class="h-12 w-auto mr-3">
-                        
-                        Estrutura de pastas recomendada:
-                        projeto/
-                        ├── index.html (seu arquivo HTML)
-                        └── assets/
-                            └── logo.png (sua imagem)
-                        
-                        Outros exemplos de caminhos:
-                        - Mesma pasta: src="logo.png"
-                        - Pasta images: src="images/logo.png" 
-                        - Pasta pai: src="../logo.png"
-                        -->
-                        
                         <div class="logo-text">
                             <h1 class="text-2xl font-bold jupiter-font" style="color: #2823bc;">DÔMATA</h1>
                             <p class="text-xs text-gray-500 -mt-1 jupiter-font">ENGENHARIA & CONSTRUÇÃO</p>
@@ -437,8 +420,8 @@
                         ✅ <strong>Formulário Ativo:</strong> Este formulário está conectado ao Formspree e enviará os dados diretamente para seu email!
                     </p>
                     
-                    <!-- FORMULÁRIO CONFIGURADO COM FORMSPREE - VERSÃO CORRIGIDA -->
-                    <form action="https://formspree.io/f/xjkepvby" method="POST" class="space-y-6">
+                    <!-- FORMULÁRIO COM AJAX (SEM REDIRECIONAMENTO) -->
+                    <form id="contact-form" class="space-y-6" onsubmit="handleFormSubmit(event)">
                         <div class="grid md:grid-cols-2 gap-6">
                             <div>
                                 <label class="block text-sm font-medium mb-2">Nome Completo</label>
@@ -473,18 +456,31 @@
                             <textarea name="message" rows="4" required class="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:border-transparent text-white" placeholder="Descreva seu projeto em detalhes..." onfocus="this.style.borderColor='#2823bc'; this.style.boxShadow='0 0 0 2px rgba(40, 35, 188, 0.5)'" onblur="this.style.borderColor='#4b5563'; this.style.boxShadow='none'"></textarea>
                         </div>
                         
-                        <!-- Campos ocultos para melhor organização -->
-                        <input type="hidden" name="_subject" value="🏗️ Nova Solicitação - Site Dômata Engenharia">
-                        <input type="hidden" name="_template" value="table">
-                        
-                        <button type="submit" class="w-full text-white py-3 px-6 rounded-lg font-semibold transition-colors" style="background-color: #2823bc;" onmouseover="this.style.backgroundColor='#1f1a9e'" onmouseout="this.style.backgroundColor='#2823bc'">
-                            Enviar Solicitação
+                        <button type="submit" id="submit-btn" class="w-full text-white py-3 px-6 rounded-lg font-semibold transition-colors" style="background-color: #2823bc;" onmouseover="this.style.backgroundColor='#1f1a9e'" onmouseout="this.style.backgroundColor='#2823bc'">
+                            <span id="btn-text">Enviar Solicitação</span>
+                            <span id="btn-loading" class="hidden">Enviando...</span>
                         </button>
                     </form>
                 </div>
             </div>
         </div>
     </section>
+
+    <!-- Modal de Sucesso -->
+    <div id="success-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-xl p-8 max-w-md mx-4 text-center">
+            <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                </svg>
+            </div>
+            <h3 class="text-xl font-semibold text-gray-900 mb-2">Mensagem Enviada!</h3>
+            <p class="text-gray-600 mb-6">Obrigado pelo contato! Retornaremos em breve com uma proposta personalizada.</p>
+            <button onclick="closeSuccessModal()" class="text-white px-6 py-2 rounded-lg font-semibold" style="background-color: #2823bc;">
+                Voltar ao Site
+            </button>
+        </div>
+    </div>
 
     <!-- Footer -->
     <footer class="bg-black text-white py-12">
@@ -586,8 +582,71 @@
             });
         });
 
-        // Formspree handles the form submission automatically
-        // No custom JavaScript needed for basic functionality
+        // Função para lidar com o envio do formulário via AJAX
+        function handleFormSubmit(event) {
+            event.preventDefault(); // Impede o redirecionamento
+            
+            // Mostra loading no botão
+            const btnText = document.getElementById('btn-text');
+            const btnLoading = document.getElementById('btn-loading');
+            const submitBtn = document.getElementById('submit-btn');
+            const form = document.getElementById('contact-form');
+            
+            btnText.classList.add('hidden');
+            btnLoading.classList.remove('hidden');
+            submitBtn.disabled = true;
+            
+            // Coleta os dados do formulário
+            const formData = new FormData(form);
+            
+            // Adiciona campos ocultos necessários
+            formData.append('_subject', '🏗️ Nova Solicitação - Site Dômata Engenharia');
+            formData.append('_template', 'table');
+            formData.append('_autoresponse', 'Obrigado pelo contato! Retornaremos em breve com uma proposta personalizada para seu projeto.');
+            
+            // Envia via AJAX para o Formspree
+            fetch('https://formspree.io/f/xjkepvby', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'Accept': 'application/json'
+                }
+            })
+            .then(response => {
+                if (response.ok) {
+                    // Sucesso - mostra modal e limpa formulário
+                    showSuccessModal();
+                    form.reset();
+                } else {
+                    // Erro - mostra alerta
+                    alert('Erro ao enviar mensagem. Tente novamente ou entre em contato por telefone.');
+                }
+            })
+            .catch(error => {
+                // Erro de rede
+                alert('Erro de conexão. Verifique sua internet e tente novamente.');
+            })
+            .finally(() => {
+                // Restaura o botão sempre
+                btnText.classList.remove('hidden');
+                btnLoading.classList.add('hidden');
+                submitBtn.disabled = false;
+            });
+        }
+
+        // Função para mostrar modal de sucesso
+        function showSuccessModal() {
+            document.getElementById('success-modal').classList.remove('hidden');
+        }
+
+        // Função para fechar modal e voltar ao topo
+        function closeSuccessModal() {
+            document.getElementById('success-modal').classList.add('hidden');
+            // Volta para o topo da página
+            scrollToSection('inicio');
+            // Limpa o formulário
+            document.querySelector('form').reset();
+        }
 
         // Show more projects function
         function showMoreProjects() {
@@ -627,5 +686,5 @@
             observer.observe(card);
         });
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9796912ed4ada197',t:'MTc1NjkxNjM0OS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9797d8056261a197',t:'MTc1NjkyOTczNy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
