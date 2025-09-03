@@ -58,8 +58,11 @@
             <div class="flex justify-between items-center h-16">
                 <div class="flex items-center">
                     <div class="flex-shrink-0 flex items-center">
-                        <!-- Logo SVG personalizada da Dômata -->
-                        <svg class="h-12 w-12 mr-3" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                        <!-- Logo da Dômata -->
+                        <img src="logo.jpg" alt="Dômata Logo" class="h-12 w-auto mr-3" onerror="this.style.display='none'; document.getElementById('fallback-logo').style.display='block';">
+                        
+                        <!-- Logo SVG de fallback (caso a imagem não carregue) -->
+                        <svg id="fallback-logo" class="h-12 w-12 mr-3" style="display: none;" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
                             <!-- Fundo circular -->
                             <circle cx="50" cy="50" r="48" fill="#2823bc" stroke="#1f1a9e" stroke-width="2"/>
                             <!-- Letra D estilizada -->
@@ -489,8 +492,11 @@
             <div class="grid md:grid-cols-4 gap-8">
                 <div class="md:col-span-2">
                     <div class="flex items-center mb-4">
-                        <!-- Logo SVG no rodapé -->
-                        <svg class="h-10 w-10 mr-3" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                        <!-- Logo no rodapé -->
+                        <img src="logo.jpg" alt="Dômata Logo" class="h-10 w-auto mr-3" onerror="this.style.display='none'; document.getElementById('footer-fallback-logo').style.display='block';">
+                        
+                        <!-- Logo SVG de fallback no rodapé -->
+                        <svg id="footer-fallback-logo" class="h-10 w-10 mr-3" style="display: none;" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
                             <circle cx="50" cy="50" r="48" fill="#2823bc" stroke="#1f1a9e" stroke-width="2"/>
                             <path d="M25 25 L25 75 L45 75 Q65 75 65 50 Q65 25 45 25 Z" fill="white" stroke="none"/>
                             <rect x="70" y="35" width="8" height="30" fill="white"/>
@@ -621,5 +627,5 @@
             observer.observe(card);
         });
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9796689be405a197',t:'MTc1NjkxNDY4Ny4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9796912ed4ada197',t:'MTc1NjkxNjM0OS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
